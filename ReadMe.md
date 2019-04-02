@@ -26,7 +26,7 @@ The rule of render performance is **Measure first then optimize**
 
 ### 1. HTML Performance
 
-1. <meta name="viewport" content="width=device-width"> ---> This tells the browser that the width of the viewport should be device width. If this is not provided then the browser will use default viewport width which is 980px. Width of viewport = width of body.
+1. `<meta name="viewport" content="width=device-width">` ---> This tells the browser that the width of the viewport should be device width. If this is not provided then the browser will use default viewport width which is 980px. Width of viewport = width of body.
     
 ### 2. CSS Performance
 
