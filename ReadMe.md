@@ -33,7 +33,7 @@ The rule of render performance is **Measure first then optimize**
 1. **The more general selector is easy to evaluate** --> This is because the more generic the css rule is the less work the browser needs to do to parse the DOM and apply the CSS. Eg. In the below image if we need to apply the CSS to the p tag then browser will have to parse the DOM to see if the p tag has div as its parent or not. Whereas in the case of h1 it is straight forward.
 ![Screen Shot 2019-04-01 at 6 07 53 PM](https://user-images.githubusercontent.com/46783722/55328059-234d8580-54a9-11e9-8dbc-b2f8d84a454b.png)
 
-2. **Display: none** ---> This will remove the node and all the child nodes from the render tree. So in the below example the no child node of span will be parsed by the browser.
+2. **Display: none** ---> This will remove the node and all the child nodes from the render tree. So in the below example no child node of span will be parsed by the browser.
 ![Screen Shot 2019-04-01 at 6 32 48 PM](https://user-images.githubusercontent.com/46783722/55329587-9b697a80-54ac-11e9-829a-ca28f429330f.png)
 
 3. **What happens when the parser encounters a script tag but the CSSOM isn’t ready yet?** ---> The Javascript execution will be halted until the CSSOM is ready. Even though the DOM construction stops when a script tag is encountered, that’s not what happens with the CSSOM. With the CSSOM, the JS execution waits. No CSSOM, no JS execution.
@@ -56,3 +56,5 @@ Interaction at 60 frames per second!
 ### 2. Who waits for who? 
 
 `DOM ---> JS Execution ---> CSSOM`
+
+This means that Javascript block the DOM parsing and CSSOM blocks javascript execution. So if the CSSOM is not ready the JS engine will be blocked. Also CSSOM is render blocking.
