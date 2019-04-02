@@ -111,6 +111,23 @@ Interaction at 60 frames per second!
 In the below example although the number of Critical resources are 3 but it only takes 2 roundtrip's since JS and CSS are downloaded in parallel. `Time taken for all round trips = Time taken to render the page.`
 ![Screen Shot 2019-04-02 at 11 24 09 AM](https://user-images.githubusercontent.com/46783722/55379213-e4b3db80-5539-11e9-8a20-7de6265242fb.png)
 
+The below html is a perfect example of non render blocking html.
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="style.css" rel="stylesheet" media="print">
+  </head>
+  <body>
+    <p>Hello <span>web performance</span> students!</p>
+    <div><img src="awesome-photo.jpg"></div>
+    <script src="app.js" async></script>
+  </body>
+</html>
+```
+![Screen Shot 2019-04-02 at 3 35 09 PM](https://user-images.githubusercontent.com/46783722/55394454-f5c21400-555c-11e9-8fc9-a0aaf91fea04.png)
+
 **Note** : Images don't block CRP.
 
 ### 2. Who waits for who? 
