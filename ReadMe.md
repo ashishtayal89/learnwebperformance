@@ -10,11 +10,13 @@ A guide to improve the performance of your site.
 4. **Why can't we have incremental CSS rendering?** --->
     This is because CSS is cascading in nature ie child node inherits properties from its parent node. Because of this the final CSS for a node can only be defined when we have the complete CSSOM ready. So the browser blocks page rendering till it receives all the CSS. **Hence CSS is render blocking.**
 5. **Batch updates in layout**
-6. **Critical CSS**
+6. **Critical CSS and Immediate CSS**
 7. **Execute scripts on browser unload event**
-8. **Critical Path Metrics**
-9. **Immediate CSS**
-10. **preload scanner** --->
+8. **Critical Path Metrics** --->
+    1. Number of critical resources.
+    2. Total Critical KB.
+    3. Minimum Critical Path Length/RoundTrips
+9. **preload scanner** --->
 Analysis:
     1. Ideally the timing.js is loaded after 
         1. The style.css in loaded and CSSOM is prepared.
@@ -27,13 +29,17 @@ Analysis:
 
 ## Network Performance
 
-### 1. Make Few Http Request
+### 1. Make Few Http Request 
+1. **Bundling** ---> Bundle multiple files to a single file.
 ### 2. Send as small as possible
 1. **Minify files** --> HTML, CSS and JS
     Html minification includes removal of comments etc. CSS minification means removal of white spaces etc. Js minification means removal of white spaces, renaming variables etc.
-2. **Compress files** --> 
+2. **Compress files** --> Http Compressions Eg Gzip
 ### 3. Request as infrequently as possible
+Implement the right caching strategy for your app.
 ### 4. Reduce network latency
+1. Faster network speed
+2. Http2 protocol
 
 ## Render Performance
 
@@ -88,8 +94,8 @@ defer
 ### 1. CRP : 
 `Character -----> Tokens(Using Tokenizer) -----> Nodes -----> DOM + CSSOM ----> Render Tree -----> Layout -----> Paint ----> Compose`
 
-Parameters to evaluate a CRP :
-1. Number critical resources.
+Parameters to evaluate a CRP OR **Critical Path Metrics**:
+1. Number of critical resources.
 2. Total Critical KB.
 3. Minimum Critical Path Length/RoundTrips
 
