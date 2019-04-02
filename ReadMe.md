@@ -46,7 +46,7 @@ The rule of render performance is **Measure first then optimize**
 ## Miscellaneous
 
 ### 1. CRP : 
-`Character -----> Tokens(Using Tokenizer) -----> Nodes -----> DOM + CSSOM ----> Render Tree -----> Layout -----> Paint`
+`Character -----> Tokens(Using Tokenizer) -----> Nodes -----> DOM + CSSOM ----> Render Tree -----> Layout -----> Paint ----> Compose`
 
 The process of handling HTML, CSS and Javascript to render a webpage.
 Interaction at 60 frames per second!
