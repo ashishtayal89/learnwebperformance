@@ -4,27 +4,20 @@ A guide to improve the performance of your site.
 
 ## Important Terms
 
-1. **Page First Render**
+1. **First Meaningful Paint and Start Render Time** ---> **Start Render Time** is the moment something first displays on the user's screen. The webpage goes from a blank white screen and changes.
 2. **Incremental HTML delivery**
 3. **Incremental DOM constructions or Progressive Rendering**
 4. **Why can't we have incremental CSS rendering?** --->
     This is because CSS is cascading in nature ie child node inherits properties from its parent node. Because of this the final CSS for a node can only be defined when we have the complete CSSOM ready. So the browser blocks page rendering till it receives all the CSS. **Hence CSS is render blocking.**
 5. **Batch updates in layout**
-6. **Critical CSS and Immediate CSS**
+6. **Critical CSS and Immediate CSS** ---> The CSS that is needed in order to load a page is called the critical CSS. In general, a page load should only be blocked on critical CSS. Uncritical CSS is CSS that the page might need later. Theoretically, the most optimal approach is to inline critical CSS into the `<head>` of the HTML. For example, suppose clicking a button causes a modal to appear. The modal only appears after clicking the button. The modal's style rules are uncritical, because the modal will never be displayed when the page is first loaded.The Coverage tab of Chrome DevTools can help you discover critical and uncritical CSS. There are a lot of tools that help you in deferring uncritical CSS. Eg loadCSS
 7. **Execute scripts on browser unload event**
 8. **Critical Path Metrics** --->
     1. Number of critical resources.
     2. Total Critical KB.
     3. Minimum Critical Path Length/RoundTrips
-9. **preload scanner** --->
-Analysis:
-    1. Ideally the timing.js is loaded after 
-        1. The style.css in loaded and CSSOM is prepared.
-        2. And the app.js is loaded and executed. This would delay the CRP since the browser has to wait for a long time before it can start loading the timing.js file.
-    2. But if we add the `rel="preload"` tag to the script file like `<script src="timing.js" rel="preload">` then the browser preload scanner scans the html for any preload script and loads them in parallel with the other resources.
-![Screen Shot 2019-04-02 at 1 55 38 PM](https://user-images.githubusercontent.com/46783722/55387417-0e2b3200-554f-11e9-9e54-7d786e89d3aa.png)
-
-
+11. **TTFB** ---> This is the amount of time it takes after the client sends an HTTP request to receive the first byte of the requested resource from the server. The resource can be HTML,CSS,JS etc. A large TTFB indicates slow server or network issue.
+12. **Above the fold view** ---> Above the fold, as it applies to Web design, is the portion of a Web page that is visible in a browser window when the page first loads. The portion of the page that requires scrolling in order to see content is called "below the fold."
 
 
 ## Network Performance
@@ -67,6 +60,70 @@ Eg We can add a print CSS in a separate css file say `style-print.css` and load 
 
 5. **Inline Critical CSS** ---> This helps in quick creating of CSSOM and prevent JS execution from getting blocked.
 
+6. **Defer Non-critical CSS** ---> When it comes to page speed, defer loading CSS scripts is most beneficial when your web pages load large CSS scripts. Now you can’t just stick all your CSS in one file, defer load it, and expect your web pages to turn out well. The first view your visitors (especially ones with slow internet connections or on mobile devices) may get of your website will either be a blank page or look horrible because your web pages will not be styled, simply because the CSS hasn't been loaded yet. This is the reason defer loading all your CSS is not an option. Like explained above, the solution to this is finding out which part of your CSS is used for the above-the-fold initial view of your page. Once you know this you should inline this CSS script in the HTML head and defer load the remainder of your CSS.
+
+    **Note** : Do not defer load a small or medium sized CSS script. Only defer load bigger CSS scripts.
+    **How to defer load un-critical css?** 
+    If html is like this
+    ```html
+    <html>
+        <head>
+            <link rel="stylesheet" href="small.css">
+        </head>
+        <body>
+            <div class="blue">
+                Hello, world!
+            </div>
+        </body>
+    </html>
+    ```
+    If CSS is like this
+        
+    ```css
+        .yellow {background-color: yellow;}
+        .blue {color: blue;}
+        .big { font-size: 8em; }
+        .bold { font-weight: bold; }
+    ```
+    Then you can inline critical CSS and defer non-critical CSS like this
+    ```html
+        <html>
+            <head>
+                <style>
+                    .blue{color:blue;}
+                </style>
+            </head>
+            <body>
+              <div class="blue">
+                Hello, world!
+              </div>
+              <noscript id="deferred-styles">
+                <link rel="stylesheet" type="text/css" href="small.css"/>
+              </noscript>
+              <script>
+                var loadDeferredStyles = function() {
+                  var addStylesNode = document.getElementById("deferred-styles");
+                  var replacement = document.createElement("div");
+                  replacement.innerHTML = addStylesNode.textContent;
+                  document.body.appendChild(replacement)
+                  addStylesNode.parentElement.removeChild(addStylesNode);
+                };
+                var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                    window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+                if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+                else window.addEventListener('load', loadDeferredStyles);
+              </script>
+            </body>
+        </html>
+    ```
+The critical styles needed to style the above-the-fold content are inlined and applied to the document immediately. The full small.css is loaded after initial painting of the page. Its styles are applied to the page once it finishes loading, without blocking the initial render of the critical content.
+
+`Note : This transformation, including the determination of critical/non-critical CSS, inlining of the critical CSS, and deferred loading of the non-critical CSS, can be made automatically by the PageSpeed Optimization modules(https://developers.google.com/speed/pagespeed/module/) for nginx, apache, IIS, ATS, and Open Lightspeed, when you enable the prioritize_critical_css filter.`
+
+`Note : See also the loadCSS function to help load CSS asynchronously, which can work with Critical, a tool to extract the critical CSS from a web page`
+
+`Note : The web platform will soon support loading stylesheets in a non-render-blocking manner, without having to resort to using JavaScript, using [HTML Imports](http://w3c.github.io/webcomponents/spec/imports/#link-type-import).`
+
 ### 3. Javascript Performance 
 
 **The entire DOM construction process is halted until the script finishes executing**.This is because JavaScript can alter both the DOM and CSSOM. Since the browser isn’t sure what this particular Javascript will do, it takes precaution by halting the entire DOM construction all together. So it is extremely important to add them to the end of our html page and not at the beginning.
@@ -88,6 +145,16 @@ defer
 ![Screen Shot 2019-04-02 at 10 39 05 AM](https://user-images.githubusercontent.com/46783722/55377663-96034300-5533-11e9-9663-e2f92d9cbc8b.png)
 
 **Note** : Inline scripts don't have any async or defer tag so they are always parser blocking.
+
+9. **using preload scanner** --->
+Analysis:
+    1. Ideally the timing.js is loaded after 
+        1. The style.css in loaded and CSSOM is prepared.
+        2. And the app.js is loaded and executed. This would delay the CRP since the browser has to wait for a long time before it can start loading the timing.js file.
+    2. But if we add the `rel="preload"` tag to the script file like `<script src="timing.js" rel="preload">` then the browser preload scanner scans the html for any preload script and loads them in parallel with the other resources.
+![Screen Shot 2019-04-02 at 1 55 38 PM](https://user-images.githubusercontent.com/46783722/55387417-0e2b3200-554f-11e9-9e54-7d786e89d3aa.png)
+
+` Note : This tag work for both <link> and <script> tag. Which means it works for external JS as well as CSS.`
 
 ## Miscellaneous
 
