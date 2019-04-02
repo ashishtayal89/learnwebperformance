@@ -116,19 +116,20 @@ Eg We can add a print CSS in a separate css file say `style-print.css` and load 
             </body>
         </html>
     ```
-The critical styles needed to style the above-the-fold content are inlined and applied to the document immediately. The full small.css is loaded after initial painting of the page. Its styles are applied to the page once it finishes loading, without blocking the initial render of the critical content.
+    The critical styles needed to style the above-the-fold content are inlined and applied to the document immediately. The full small.css is loaded after initial painting of the page. Its styles are applied to the page once it finishes loading, without blocking the initial render of the critical content.
 
-`Note : This transformation, including the determination of critical/non-critical CSS, inlining of the critical CSS, and deferred loading of the non-critical CSS, can be made automatically by the PageSpeed Optimization modules(https://developers.google.com/speed/pagespeed/module/) for nginx, apache, IIS, ATS, and Open Lightspeed, when you enable the prioritize_critical_css filter.`
+    `Note : This transformation, including the determination of critical/non-critical CSS, inlining of the critical CSS, and deferred loading of the non-critical CSS, can be made automatically by the PageSpeed Optimization modules(https://developers.google.com/speed/pagespeed/module/) for nginx, apache, IIS, ATS, and Open Lightspeed, when you enable the prioritize_critical_css filter.`
 
-`Note : See also the loadCSS function to help load CSS asynchronously, which can work with Critical, a tool to extract the critical CSS from a web page`
+    `Note : See also the loadCSS function to help load CSS asynchronously, which can work with Critical, a tool to extract the critical CSS from a web page`
 
-`Note : The web platform will soon support loading stylesheets in a non-render-blocking manner, without having to resort to using JavaScript, using [HTML Imports](http://w3c.github.io/webcomponents/spec/imports/#link-type-import).`
+    `Note : The web platform will soon support loading stylesheets in a non-render-blocking manner, without having to resort to using JavaScript, using [HTML Imports](http://w3c.github.io/webcomponents/spec/imports/#link-type-import).`
 
 ### 3. Javascript Performance 
 
 **The entire DOM construction process is halted until the script finishes executing**.This is because JavaScript can alter both the DOM and CSSOM. Since the browser isn’t sure what this particular Javascript will do, it takes precaution by halting the entire DOM construction all together. So it is extremely important to add them to the end of our html page and not at the beginning.
 
 In this example the HTML parsing(Tokenizing ---> Nodes ----> DOM) is stopped when it encounters a script tag and resumed after the scripts execution.
+
 ![Screen Shot 2019-04-02 at 10 06 18 AM](https://user-images.githubusercontent.com/46783722/55376677-0d82a380-552f-11e9-9271-86249073906d.png)
 
 1. **Add javascript to the bottom of your html** ---> Since Js is parser blocking, so it is wise to put all our JS files to the bottom of the page so that the HTML parser is not blocked and the DOM is created.
