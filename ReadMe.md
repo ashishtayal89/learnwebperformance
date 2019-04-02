@@ -7,14 +7,14 @@ A guide to improve the performance of your site.
 1. **Page First Render**
 2. **Incremental HTML delivery**
 3. **Incremental DOM constructions or Progressive Rendering**
-4. **Why can't we have incremental CSS rendering?**
+4. **Why can't we have incremental CSS rendering?** --->
     This is because CSS is cascading in nature ie child node inherits properties from its parent node. Because of this the final CSS for a node can only be defined when we have the complete CSSOM ready. So the browser blocks page rendering till it receives all the CSS. **Hence CSS is render blocking.**
 5. **Batch updates in layout**
 6. **Critical CSS**
 7. **Execute scripts on browser unload event**
 8. **Critical Path Metrics**
 9. **Immediate CSS**
-10. **preload scanner** 
+10. **preload scanner** --->
 Analysis:
     1. Ideally the timing.js is loaded after 
         1. The style.css in loaded and CSSOM is prepared.
