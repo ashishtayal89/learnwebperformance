@@ -134,28 +134,29 @@ In this example the HTML parsing(Tokenizing ---> Nodes ----> DOM) is stopped whe
 
 1. **Add javascript to the bottom of your html** ---> Since Js is parser blocking, so it is wise to put all our JS files to the bottom of the page so that the HTML parser is not blocked and the DOM is created.
 
-2. **Using async and defer** ---> **async** helps us to load the script without blocking the HTML parser. Also the execution of the script is not blocked by CSSOM. So it doesn't block the CRP. Although the script execution is parser blocking.
-**defer** is similar but the only difference is that the execution of the deferred script only takes place after the DOM is ready.So the execution is also not parser blocking. Also due to this reason the order of execution is the same as the order in which the scripts are ordered in the HTML.
+2. **Using async and defer** ---> 
+    **async** helps us to load the script without blocking the HTML parser. Also the execution of the script is not blocked by CSSOM. So it doesn't block the CRP. Although the script execution is parser blocking.
+    **defer** is similar but the only difference is that the execution of the deferred script only takes place after the DOM is ready. So the execution is also not parser blocking. Also due to this reason the order of execution is the same as the order in which the scripts are ordered in the HTML.
 
-**Note** : Scripts should be marked as async or defer only if they don't have any interaction with the DOM or CSSOM. Otherwise it may lead to unwanted results.
+    **Note** : Scripts should be marked as async or defer only if they don't have any interaction with the DOM or CSSOM. Otherwise it may lead to unwanted results.
 
-async
-![Screen Shot 2019-04-02 at 10 38 59 AM](https://user-images.githubusercontent.com/46783722/55377661-93a0e900-5533-11e9-9385-cfcf6499f29b.png)
+    async
+    ![Screen Shot 2019-04-02 at 10 38 59 AM](https://user-images.githubusercontent.com/46783722/55377661-93a0e900-5533-11e9-9385-cfcf6499f29b.png)
 
-defer
-![Screen Shot 2019-04-02 at 10 39 05 AM](https://user-images.githubusercontent.com/46783722/55377663-96034300-5533-11e9-9663-e2f92d9cbc8b.png)
+    defer
+    ![Screen Shot 2019-04-02 at 10 39 05 AM](https://user-images.githubusercontent.com/46783722/55377663-96034300-5533-11e9-9663-e2f92d9cbc8b.png)
 
-**Note** : Inline scripts don't have any async or defer tag so they are always parser blocking.
+    **Note** : Inline scripts don't have any async or defer tag so they are always parser blocking.
 
-9. **using preload scanner** --->
+3. **using preload scanner** --->
 Analysis:
     1. Ideally the timing.js is loaded after 
         1. The style.css in loaded and CSSOM is prepared.
         2. And the app.js is loaded and executed. This would delay the CRP since the browser has to wait for a long time before it can start loading the timing.js file.
     2. But if we add the `rel="preload"` tag to the script file like `<script src="timing.js" rel="preload">` then the browser preload scanner scans the html for any preload script and loads them in parallel with the other resources.
-![Screen Shot 2019-04-02 at 1 55 38 PM](https://user-images.githubusercontent.com/46783722/55387417-0e2b3200-554f-11e9-9e54-7d786e89d3aa.png)
+    ![Screen Shot 2019-04-02 at 1 55 38 PM](https://user-images.githubusercontent.com/46783722/55387417-0e2b3200-554f-11e9-9e54-7d786e89d3aa.png)
 
-` Note : This tag work for both <link> and <script> tag. Which means it works for external JS as well as CSS.`
+    ` Note : This tag work for both <link> and <script> tag. Which means it works for external JS as well as CSS.`
 
 ## Miscellaneous
 
