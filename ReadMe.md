@@ -109,7 +109,18 @@ The rule of render performance is **Measure first then optimize**. It is importa
         2. **Use sprite images**
 
 3. **Font Optimization** ---> Web fonts are also render blocking resource since they are loaded with CSS. You have 2 options either block the render or repaint later.  
+        ![Screen Shot 2019-04-03 at 3 52 29 PM](https://user-images.githubusercontent.com/46783722/55471946-8ca7d280-5628-11e9-9ce7-97b057f47d88.png)
+    1. The browser requests the HTML document.
+    2. The browser begins parsing the HTML response and constructing the DOM.
+    3. The browser discovers CSS, JS, and other resources and dispatches requests.
+    4. The browser constructs the CSSOM after all of the CSS content is received and combines it with the DOM tree to construct the render tree.
+        1. Font requests are dispatched after the render tree indicates which font variants are needed to render the specified text on the page.
+    5. The browser performs layout and paints content to the screen.
+        1. If the font is not yet available, the browser may not render any text pixels.
+        2. After the font is available, the browser paints the text pixels.
+
     **Resolution**  
+
     1. **Prioritize Based On Browser Support** :      
         As we mentioned earlier, since 86% of all modern browsers support WOFF format, provide WOFF and WOFF2 (better compression) and then fall back to web safe font.  
     2. **Choose Only Styles You Need** :   
@@ -124,8 +135,29 @@ The rule of render performance is **Measure first then optimize**. It is importa
         You can take it even further by using a script to detect the supported font format, base64      encoding the fonts into a single CSS file and storing them in localStorage. A browser’s native      cache gets flushed quite frequently, especially on mobile devices. So by saving to localStorage,   the file gets cached persistently.
         By deferring the loading of Web fonts and storing them in localStorage, we’ve avoided around 700ms      delay. Smashing Magazine
         LocalStorage also referred to as web storage is well supported by all browsers. Here is an example      of how to load web fonts asynchronously from localStorage after the page has started rendering.
-
+    6. **Preload your Webfont resources** :
+        ```html
+            <head>
+                <!-- Other tags... -->
+                <link rel="preload" href="/fonts/awesome-l.woff2" as="font">
+            </head>
+        ```
+        ```css
+        @font-face {
+            font-family: 'Awesome Font';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Awesome Font'),
+                 url('/fonts/awesome-l.woff2') format('woff2'), /* will be preloaded */
+                 url('/fonts/awesome-l.woff') format('woff'),
+                 url('/fonts/awesome-l.ttf') format('truetype'),
+                 url('/fonts/awesome-l.eot') format('embedded-opentype');
+            unicode-range: U+000-5FF; /* Latin glyphs */
+        }
+        ```
     `Note : Here is another method in which the Filament Group had great success by using Font Face Observer. Font Face Observer is a small @font-face loader and monitor (5.2KB minified and 1.9KB Gzipped) and can be used with Google Fonts, Typekit, etc. They were able to decrease the time at which their font starts painting from 2.7 seconds down to 300ms.`
+
+    Important Links : [Google Optimization](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/webfont-optimization)
 
 ### 2. CSS Performance
 
