@@ -108,7 +108,7 @@ The rule of render performance is **Measure first then optimize**. It is importa
             Use images sparingly. Keep the number to less than five. Using CSS3 methods, it is possible to replace images with gradients and shadows that create visually appealing effects.
         2. **Use sprite images**
 
-3. **Font Optimization** ---> Web fonts are also render blocking resource since they are loaded with CSS. You have 2 options either block the render or repaint later.
+3. **Font Optimization** ---> Web fonts are also render blocking resource since they are loaded with CSS. You have 2 options either block the render or repaint later.  
     **Resolution**  
     1. **Prioritize Based On Browser Support** :      
         As we mentioned earlier, since 86% of all modern browsers support WOFF format, provide WOFF and WOFF2 (better compression) and then fall back to web safe font.  
