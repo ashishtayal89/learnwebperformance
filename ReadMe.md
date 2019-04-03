@@ -2,14 +2,20 @@
 
 A guide to improve the performance of your site.
 
+## Importance
+
+1. **SEO optimization** ---> The search engines consider the page load speed as an essential parameter for user engagement; hence it is also factored into the web page ranking.
+
+Given two web pages with same information, the page that loads faster will rank higher in search results. So, imagine what will happen if there are hundreds of web pages faster than yours.
+
 ## Important Terms
 
-1. **First Meaningful Paint and Start Render Time** ---> **Start Render Time** is the moment something first displays on the user's screen. The webpage goes from a blank white screen and changes.
+1. **First Meaningful Paint and Start Render Time** ---> **Start Render Time** is the moment something first displays on the user's screen. The webpage goes from a blank white screen and changes.**First meaningful paint** is the first time something is painted on the screen. So we can say the start render time is the time to first meaningful paint.
 2. **Incremental HTML delivery**
-3. **Incremental DOM constructions or Progressive Rendering**
+3. **Incremental DOM constructions or Progressive Rendering** ---> This is the process in which the site is rendered in parts or progressively. Initial we see the first meaningful paint and above the fold content. Then slowly less essential details are rendered and so on.
 4. **Why can't we have incremental CSS rendering?** --->
     This is because CSS is cascading in nature ie child node inherits properties from its parent node. Because of this the final CSS for a node can only be defined when we have the complete CSSOM ready. So the browser blocks page rendering till it receives all the CSS. **Hence CSS is render blocking.**
-5. **Batch updates in layout**
+5. **Batch updates in layout** ---> The updated made in the layout should be batched or clubbed. This helps in preventing multiple reflow and repaint cycles.
 6. **Critical CSS and Immediate CSS** ---> The CSS that is needed in order to load a page is called the critical CSS. In general, a page load should only be blocked on critical CSS. Uncritical CSS is CSS that the page might need later. Theoretically, the most optimal approach is to inline critical CSS into the `<head>` of the HTML. For example, suppose clicking a button causes a modal to appear. The modal only appears after clicking the button. The modal's style rules are uncritical, because the modal will never be displayed when the page is first loaded.The Coverage tab of Chrome DevTools can help you discover critical and uncritical CSS. There are a lot of tools that help you in deferring uncritical CSS. Eg loadCSS
 7. **Execute scripts on browser unload event**
 8. **Critical Path Metrics** --->
@@ -43,7 +49,52 @@ The rule of render performance is **Measure first then optimize**. It is importa
 1. `<meta name="viewport" content="width=device-width">` ---> This tells the browser that the width of the viewport should be device width. If this is not provided then the browser will use default viewport width which is 980px. Width of viewport = width of body.
 
 **Note** : A page should ideally be under 14KB size. This is because if the size in greater than 14KB then it requires more than 1 round trip for the browser to fetch the resource which delays the CRP.
-    
+
+2. **Image Optimization**  ---> 
+
+    **Problems caused**  
+    Although the images are non-render blocking but they can take up a significant portion of the render time. Hence delaying the CRP and FMP.
+    1. **Too large image files**  
+        Large sized images, high-resolution images, and uncompressed images can drastically reduce the page load speed.
+    2. **Synchronous loading of elements**  
+        When your web page synchronously loads all the HTML, CSS, JavaScript and images together, the initial render time can be very high. Images can take up a significant portion of the render time.
+    3. **Too many images & HTTP request**  
+        Every image file referenced in the web page needs one connection to the server.Too many images in the web page not only increase the load size but also can choke the connection to the server by sending more than the allowed HTTP requests. Most modern browsers allow **six connections per domain**.
+
+    **Resolution** 
+    1. **Too large image files**  
+        1. **Display size**
+
+            Decide on an optimal width and height for image display on different end-user devices like desktop, laptop, tablet, smartphone.
+
+            Do not use one large image and scale the display size with width and height attributes of the IMG element. Instead, generate and store the different sized files.
+
+            Use conditional logic to serve the appropriately sized image file depending on the user device.
+
+        2. **Resolution**
+        
+            A standard 15” laptop screen has a display capability of about 100 PPI (Pixels Per Inch)    or DPI            (Dots Per Inch). There’s no point in serving 300 DPI resolution images.
+
+            Standard resolution for image display on web pages is 72 PPI. 300 DPI is needed for print,  not for         screens. Almost all the screens range from 72 PPI to 100 PPI.
+        
+        3. **Image manipulation or compression**
+        
+            JPEG, GIF, and PNG are the standard file formats that can compress images to take up a lesser number of bytes, thereby reducing the size of the file to be downloaded.     However, these three types of files could be further optimized by reducing the     unnecessary overhead that is stored with the images in the form of meta-data. Apart from that, you can use image manipulation techniques to cut down the size of the image without getting rid of the visual details (for more information, see this wiki page).This can be done in applications like GIMP or Adobe Photoshop for static images or using a  cloud image solution for dynamic images.
+
+            Use JPEG image where a deterioration with lossy compression for photographs is okay,instead of the lossless compression of PNG images. Check out this article on Gizmodo that describes the difference between JPEG, PNG, and GIF.
+
+            Google has introduced a new image format **WebP**, which produces image files 25% to 34% smaller than JPEG. So using the WebP format would be better.
+
+
+    2. **Synchronous loading of elements**  
+
+       Defer loading images. Instead load them asynchronously after the necessary CSS and HTML has been rendered. The images may be placed below the fold and loaded conditionally using JavaScript when the visitor scrolls down to the relevant portion of the page. This also reduces the number of HTTP requests during the initial page load.
+
+    3. **Too many images & HTTP request**  
+        1. **Reduce number of images**
+            Use images sparingly. Keep the number to less than five. Using CSS3 methods, it is possible to replace images with gradients and shadows that create visually appealing effects.
+        2. **Use sprite images**
+
 ### 2. CSS Performance
 
 1. **The more general selector is easy to evaluate** --> This is because the more generic the css rule is the less work the browser needs to do to parse the DOM and apply the CSS. Eg. In the below image if we need to apply the CSS to the p tag then browser will have to parse the DOM to see if the p tag has div as its parent or not. Whereas in the case of h1 it is straight forward.
