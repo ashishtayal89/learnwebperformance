@@ -8,6 +8,8 @@ A guide to improve the performance of your site.
 
 Given two web pages with same information, the page that loads faster will rank higher in search results. So, imagine what will happen if there are hundreds of web pages faster than yours.
 
+2. **Improved User Experience** ---> High performant website are synonymous with great user experience.
+
 ## Important Terms
 
 1. **First Meaningful Paint and Start Render Time** ---> **Start Render Time** is the moment something first displays on the user's screen. The webpage goes from a blank white screen and changes.**First meaningful paint** is the first time something is painted on the screen. So we can say the start render time is the time to first meaningful paint.
@@ -24,6 +26,9 @@ Given two web pages with same information, the page that loads faster will rank 
     3. Minimum Critical Path Length/RoundTrips
 11. **TTFB** ---> This is the amount of time it takes after the client sends an HTTP request to receive the first byte of the requested resource from the server. The resource can be HTML,CSS,JS etc. A large TTFB indicates slow server or network issue.
 12. **Above the fold view** ---> Above the fold, as it applies to Web design, is the portion of a Web page that is visible in a browser window when the page first loads. The portion of the page that requires scrolling in order to see content is called "below the fold."
+13. **lossy and lossless image compression** --->
+14. **FOUT/FOIT** ---> Flash Of Unstyled Text/Flash of Invisible Text.
+15. **Cashable resources** --->
 
 
 ## Network Performance
@@ -36,6 +41,13 @@ Given two web pages with same information, the page that loads faster will rank 
 2. **Compress files** --> Http Compressions Eg Gzip
 ### 3. Request as infrequently as possible
 Implement the right caching strategy for your app.
+1. Browser Caching
+    1. Default browser caching
+    2. Using Service workers for cache storage
+    3. Using manifest.json for application cache
+    4. Prefetch/Prerender ---> Helps to fetch resources in the background and cache them in browser cache for future use.
+2. CDN
+3. Server Caching
 ### 4. Reduce network latency
 1. Faster network speed
 2. Http2 protocol
@@ -53,6 +65,7 @@ The rule of render performance is **Measure first then optimize**. It is importa
 2. **Image Optimization**  ---> 
 
     **Problems caused**  
+
     Although the images are non-render blocking but they can take up a significant portion of the render time. Hence delaying the CRP and FMP.
     1. **Too large image files**  
         Large sized images, high-resolution images, and uncompressed images can drastically reduce the page load speed.
@@ -94,6 +107,26 @@ The rule of render performance is **Measure first then optimize**. It is importa
         1. **Reduce number of images**
             Use images sparingly. Keep the number to less than five. Using CSS3 methods, it is possible to replace images with gradients and shadows that create visually appealing effects.
         2. **Use sprite images**
+
+3. **Font Optimization** ---> Web fonts are also render blocking resource since they are loaded with CSS. You have 2 options either block the render or repaint later.
+
+    **Resolution**  
+        1. **Prioritize Based On Browser Support** :      
+        As we mentioned earlier, since 86% of all modern browsers support WOFF format, provide WOFF and WOFF2 (better compression) and then fall back to web safe font.  
+        2. **Choose Only Styles You Need** :   
+        Choose only the styles you need. This keeps the size down to a minimum. Typically most sites only       need a normal style and a bold style. You can choose which styles you want over at Google Fonts.  
+        3. **Character Sets** :  
+        Unless you are dealing with multiple languages, make sure to keep your character sets down to a         minimum.  
+        4. **Host Fonts Locally** or **Prefetch** :  
+        Host your fonts locally. Many fonts are under an open source license. Open Sans is a good example       of one you can host locally. If you aren’t hosting locally use prefetching to Google Fonts to       resolve the domain name faster. Include this in the HEAD section of your HTML:
+        `<link rel="dns-prefetch" href="//fonts.googleapis.com">`  
+        Read more about [prefetching](https://www.keycdn.com/support/prefetching)  
+        5. **Store in LocalStorage with Base64 Encoding** :  
+        You can take it even further by using a script to detect the supported font format, base64      encoding the fonts into a single CSS file and storing them in localStorage. A browser’s native      cache gets flushed quite frequently, especially on mobile devices. So by saving to localStorage,   the file gets cached persistently.
+        By deferring the loading of Web fonts and storing them in localStorage, we’ve avoided around 700ms      delay. Smashing Magazine
+        LocalStorage also referred to as web storage is well supported by all browsers. Here is an example      of how to load web fonts asynchronously from localStorage after the page has started rendering.
+
+        `Note : Here is another method in which the Filament Group had great success by using Font Face Observer. Font Face Observer is a small @font-face loader and monitor (5.2KB minified and 1.9KB Gzipped) and can be used with Google Fonts, Typekit, etc. They were able to decrease the time at which their font starts painting from 2.7 seconds down to 300ms.`
 
 ### 2. CSS Performance
 
